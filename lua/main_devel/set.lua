@@ -30,13 +30,17 @@ vim.opt.colorcolumn = '124'
 vim.g.mapleader = ' '
 
 vim.opt.clipboard="unnamedplus"
-vim.g.terminal_emulator='powershell'
 
-vim.opt.shell = 'powershell.exe'
+-- Set the terminal emulator to Zsh
+vim.g.terminal_emulator='zsh'
 
+-- Set the shell to Zsh
+vim.opt.shell = '/usr/bin/zsh'
+
+-- Adjust shell-related options for Zsh
 vim.o.shellxquote = ''
-vim.o.shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command '
-vim.o.shellquote = '' 
-vim.o.shellpipe = '| Out-File -Encoding UTF8 %s'
-vim.o.shellredir = '| Out-File -Encoding UTF8 %s'
+vim.o.shellcmdflag = '-c'
+vim.o.shellquote = ''
+vim.o.shellpipe = '2>&1| tee %s'
+vim.o.shellredir = '>%s 2>&1'
 
