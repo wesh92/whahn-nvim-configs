@@ -56,8 +56,4 @@ vim.keymap.set("n", "<leader>pou", ":update<bar>!poetry update<CR>")
 
 -- Copy Filepaths
 vim.keymap.set("n", "<leader>fin", ":let @+ = expand('%')<CR>")
-vim.keymap.set("n", "<leader>fip", ":let @+ = expand('%:p')<CR>")
-
--- Astronomer Specifics
-vim.keymap.set("n", "<leader>ah", ":!cd ~\\Documents\\GitHub\\DE-pipelines\\airflow_processing\\include;.\\win_copy_src.ps1 -r -d<CR>")
-vim.keymap.set("n", "<leader>ahc", ":!cd ~\\Documents\\GitHub\\DE-pipelines\\airflow_processing\\include;.\\win_copy_src.ps1 -o -d<CR>") 
+vim.keymap.set("n", "<leader>fip", ":let @+ = expand('%:p')<CR>") 
