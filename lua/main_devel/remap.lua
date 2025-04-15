@@ -26,9 +26,11 @@ vim.keymap.set('n', '<leader>vc', ":bd<CR>")
 -- Powershell Runner
 vim.keymap.set('n', '<leader>ps', ':update<bar>!powershell %<CR>')
 
+-- Terminal (visual mode only)
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
+-- Terminal (Selects highlighted text for replacement)
 vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
 
 -- Ruff Checks
@@ -37,23 +39,32 @@ vim.keymap.set("n", "<leader>rf", ":update<bar>!ruff check % --fix<CR>")
 -- Ruff check but ignore unused import rule
 vim.keymap.set("n", "<leader>rfi", ":update<bar>!ruff check % --fix --ignore=F401<CR>")
 
--- Black Formatter
-vim.keymap.set("n", "<leader>bf", ":update<bar>!black %<CR>")
-
--- Pytest
-vim.keymap.set("n", "<leader>pt", ":update<bar>!pytest %<CR>")
--- Pytest no warnings
-vim.keymap.set("n", "<leader>pnw", ":update<bar>!pytest -p no:warnings %<CR>")
-
--- Poetry add
-vim.keymap.set("n", "<leader>poa", ":update<bar>!poetry add ")
-
--- Poetry remove
-vim.keymap.set("n", "<leader>por", ":update<bar>!poetry remove ")
-
--- Poetry update
-vim.keymap.set("n", "<leader>pou", ":update<bar>!poetry update<CR>")
-
 -- Copy Filepaths
 vim.keymap.set("n", "<leader>fin", ":let @+ = expand('%')<CR>")
-vim.keymap.set("n", "<leader>fip", ":let @+ = expand('%:p')<CR>") 
+vim.keymap.set("n", "<leader>fip", ":let @+ = expand('%:p')<CR>")
+
+-- UV (for python)
+vim.keymap.set("n", "<leader>ua", ":update<bar>!uv add ")
+vim.keymap.set("n", "<leader>ui", ":update<bar>!uv init<CR>")
+vim.keymap.set("n", "<leader>ur", ":update<bar>!uv remove ")
+vim.keymap.set("n", "<leader>up", ":update<bar>!uv python ")
+
+-- Git
+-- Note: uses my custom git wrappers and expanders in Fish
+vim.keymap.set("n", "<leader>ga", ":update<bar>!git add ")
+vim.keymap.set("n", "<leader>gc", ":update<bar>!git commit -m -S ")
+vim.keymap.set("n", "<leader>gp", ":update<bar>!git push ")
+vim.keymap.set("n", "<leader>gpl", ":update<bar>!git pull ")
+vim.keymap.set("n", "<leader>gb", ":update<bar>!git branch ")
+vim.keymap.set("n", "<leader>gco", ":update<bar>!git checkout ")
+vim.keymap.set("n", "<leader>gcb", ":update<bar>!git checkout -b ")
+vim.keymap.set("n", "<leader>gcm", function()
+    vim.cmd("update")
+    local branch = vim.fn.input("Checkout branch (main/master): ")
+    if branch == "main" or branch == "master" then
+        vim.cmd("!git checkout " .. branch)
+    else
+        print("Invalid branch choice. Use 'main' or 'master'")
+    end
+end)
+

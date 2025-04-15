@@ -31,13 +31,13 @@ vim.g.mapleader = ' '
 
 vim.opt.clipboard="unnamedplus"
 
--- Set the terminal emulator to Zsh
-vim.g.terminal_emulator='zsh'
+-- Set the terminal emulator to fish
+vim.g.terminal_emulator='fish'
 
--- Set the shell to Zsh
-vim.opt.shell = '/usr/bin/zsh'
+-- Set the shell to fish
+vim.opt.shell = '/usr/bin/fish'
 
--- Adjust shell-related options for Zsh
+-- Adjust shell-related options for fish
 vim.o.shellxquote = ''
 vim.o.shellcmdflag = '-c'
 vim.o.shellquote = ''
