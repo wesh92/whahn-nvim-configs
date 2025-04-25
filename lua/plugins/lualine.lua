@@ -98,7 +98,7 @@ return {
       tabline = {},
       winbar = {},
       inactive_winbar = {},
-      extensions = {'nvim-tree', 'telescope'}
+      extensions = {'nvim-tree'}
     }
   end
 }
