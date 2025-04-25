@@ -1,12 +1,6 @@
-require("main_devel")
-require("main_devel.set")
-require("main_devel.remap")
-require("main_devel.lazy")
-
-
-if vim.g.vscode then
-    -- VSCode extension
-else
-    -- ordinary Neovim
-end
-
+require("config.lazy")
+require("config/remap")
+require("config/set")
+require("lazy").setup("plugins")
+vim.cmd(":Copilot disable")
+vim.cmd.colorscheme "catppuccin-macchiato"
