@@ -68,3 +68,12 @@ vim.keymap.set("n", "<leader>gcm", function()
     end
 end)
 
+-- DBT
+vim.api.nvim_create_autocmd("Filetype",{
+    pattern = {"sql"},
+    callback = function()
+        vim.schedule(function()
+            vim.keymap.set("n", "<leader>gd", "<CMD>DBTGoToDefinition<CR>", { desc = "Go to definition DBT" })
+        end)
+    end,
+})
