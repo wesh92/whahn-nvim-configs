@@ -12,6 +12,13 @@ local function check(name, fn)
     io.stdout:flush()
 end
 
+check("runtime matches the reviewed stable editor pin", function()
+    local expected = vim.fn.readfile(vim.fn.stdpath("config") .. "/.neovim-version")[1]
+    local version = vim.version()
+    local actual = string.format("%d.%d.%d", version.major, version.minor, version.patch)
+    assert(actual == expected and not version.prerelease, "expected stable " .. expected .. ", got " .. tostring(version))
+end)
+
 check("all configuration Lua files parse", function()
     local root = vim.fn.stdpath("config")
     local files = vim.fn.glob(root .. "/lua/**/*.lua", false, true)
@@ -38,6 +45,24 @@ check("completion can expand an LSP snippet", function()
     assert(vim.api.nvim_get_current_line() == "snippet_value")
     require("luasnip").unlink_current()
     vim.api.nvim_buf_delete(buf, { force = true })
+end)
+
+check("LuaSnip native regex transformations work", function()
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_set_current_buf(buf)
+    local luasnip = require("luasnip")
+    luasnip.lsp_expand("${1:hello} ${1/hello/world/}")
+    assert(vim.api.nvim_get_current_line() == "hello world", vim.api.nvim_get_current_line())
+    luasnip.unlink_current()
+    vim.api.nvim_buf_delete(buf, { force = true })
+end)
+
+check("updated plugin specifications match their maintained APIs", function()
+    local plugins = require("lazy.core.config").plugins
+    assert(plugins.harpoon.branch == "harpoon2")
+    assert(type(require("harpoon").list) == "function")
+    assert(plugins["telescope.nvim"].version == "^0.2.2")
+    assert(plugins["mini.surround"].url:find("nvim-mini/mini.surround", 1, true))
 end)
 
 check("native LuaLS settings and completion capabilities are applied", function()
