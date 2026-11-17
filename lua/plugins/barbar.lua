@@ -46,8 +46,7 @@ return {
     map('n', '<Space>bl', '<Cmd>BufferOrderByLanguage<CR>', opts)
     map('n', '<Space>bw', '<Cmd>BufferOrderByWindowNumber<CR>', opts)
 
-    -- No specific setup call needed for barbar if vim.g.barbar_auto_setup = false
-    -- require('barbar').setup { ... } -- Add if you have specific barbar options
+    require('barbar').setup({})
   end,
   version = '^1.0.0', -- optional: always use the latest git tag
 }

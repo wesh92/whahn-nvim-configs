@@ -5,6 +5,7 @@ return {
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-path",
+            { "L3MON4D3/LuaSnip", version = "v2.*", build = "make install_jsregexp" },
             "saadparwaiz1/cmp_luasnip",
             "onsails/lspkind.nvim",
         },
@@ -29,6 +30,7 @@ return {
                     ["<C-Space>"] = cmp.mapping.complete(),
                 }),
                 sources = cmp.config.sources({
+                    { name = "lazydev", group_index = 0 },
                     { name = "nvim_lsp" },
                     { name = "luasnip" },
                     { name = "buffer" },
