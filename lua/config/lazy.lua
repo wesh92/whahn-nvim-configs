@@ -2,15 +2,19 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  local lock = vim.json.decode(table.concat(vim.fn.readfile(vim.fn.stdpath("config") .. "/lazy-lock.json"), "\n"))
+  local commit = assert(lock["lazy.nvim"], "lazy.nvim must be pinned in lazy-lock.json").commit
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", lazyrepo, lazypath })
+  if vim.v.shell_error == 0 then
+    out = vim.fn.system({ "git", "-C", lazypath, "checkout", "--detach", commit })
+  end
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { "Failed to bootstrap the pinned lazy.nvim revision:\n", "ErrorMsg" },
       { out, "WarningMsg" },
-      { "\nPress any key to exit..." },
     }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
+    -- Container builds have no keyboard: fail instead of waiting indefinitely.
+    vim.cmd("cquit 1")
   end
 end
 vim.opt.rtp:prepend(lazypath)
@@ -31,5 +35,5 @@ require("lazy").setup({
   -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { "habamax" } },
   -- automatically check for plugin updates
-  checker = { enabled = true },
+  checker = { enabled = #vim.api.nvim_list_uis() > 0 },
 })

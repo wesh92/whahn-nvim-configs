@@ -1,2 +1,9 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+*.sh text eol=lf
+*.lua text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+.neovim-version text eol=lf
+neovim-sha256.txt text eol=lf

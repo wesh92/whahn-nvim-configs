@@ -1,8 +1,17 @@
 return {
     {
         "folke/noice.nvim",
+        event = "VeryLazy",
+        -- Install the UI plugins in headless builds, but leave their messages
+        -- on stderr instead of attaching a UI that nobody can see.
+        config = function(_, opts)
+            if #vim.api.nvim_list_uis() > 0 then
+                require("noice").setup(opts)
+            end
+        end,
         dependencies = {
             { "MunifTanjim/nui.nvim" },
+            { "rcarriga/nvim-notify" },
         },
         opts = {
             lsp = {

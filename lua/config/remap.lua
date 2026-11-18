@@ -1,7 +1,7 @@
 vim.keymap.set("n", "<Space>", "<Nop>", { silent = true, remap = false })
 
 vim.g.mapleader = " "
-vim.keymap.set("n", "<leader>vv", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>vv", "<Cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" })
 -- Yank into system clipboard
 vim.keymap.set({'n', 'v'}, '<leader>y', '"+y') -- yank motion
 vim.keymap.set({'n', 'v'}, '<leader>Y', '"+Y') -- yank line
@@ -15,16 +15,17 @@ vim.keymap.set('n', '<leader>p', '"+p')  -- paste after cursor
 vim.keymap.set('n', '<leader>P', '"+P')  -- paste before cursor
 
 -- Python stuff
-vim.keymap.set('n', '<leader>py', ":update<bar>!python %<CR>")
-
--- Copilot Panel
-vim.keymap.set('n', '<leader>cc', ":Copilot panel<CR>")
+vim.keymap.set('n', '<leader>py', ":update<bar>!python %:S<CR>")
 
 -- Close Buffer
 vim.keymap.set('n', '<leader>vc', ":bd<CR>")
 
--- Powershell Runner
-vim.keymap.set('n', '<leader>ps', ':update<bar>!powershell %<CR>')
+-- PowerShell is optional and is not installed in the Arch image.
+local powershell = vim.fn.executable('pwsh') == 1 and 'pwsh'
+    or (vim.fn.executable('powershell') == 1 and 'powershell')
+if powershell then
+    vim.keymap.set('n', '<leader>ps', ':update<bar>!' .. powershell .. ' -File %:S<CR>')
+end
 
 -- Terminal (visual mode only)
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
@@ -34,10 +35,10 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>")
 
 -- Ruff Checks
-vim.keymap.set("n", "<leader>rc", ":update<bar>!ruff check %<CR>")
-vim.keymap.set("n", "<leader>rf", ":update<bar>!ruff check % --fix<CR>")
+vim.keymap.set("n", "<leader>rc", ":update<bar>!ruff check %:S<CR>")
+vim.keymap.set("n", "<leader>rf", ":update<bar>!ruff check %:S --fix<CR>")
 -- Ruff check but ignore unused import rule
-vim.keymap.set("n", "<leader>rfi", ":update<bar>!ruff check % --fix --ignore=F401<CR>")
+vim.keymap.set("n", "<leader>rfi", ":update<bar>!ruff check %:S --fix --ignore=F401<CR>")
 
 -- Copy Filepaths
 vim.keymap.set("n", "<leader>fin", ":let @+ = expand('%')<CR>")
@@ -52,7 +53,7 @@ vim.keymap.set("n", "<leader>up", ":update<bar>!uv python ")
 -- Git
 -- Note: uses my custom git wrappers and expanders in Fish
 vim.keymap.set("n", "<leader>ga", ":update<bar>!git add ")
-vim.keymap.set("n", "<leader>gc", ":update<bar>!git commit -m -S ")
+vim.keymap.set("n", "<leader>gc", ":update<bar>!git commit -S -m ")
 vim.keymap.set("n", "<leader>gp", ":update<bar>!git push ")
 vim.keymap.set("n", "<leader>gpl", ":update<bar>!git pull ")
 vim.keymap.set("n", "<leader>gb", ":update<bar>!git branch ")
@@ -69,11 +70,13 @@ vim.keymap.set("n", "<leader>gcm", function()
 end)
 
 -- DBT
-vim.api.nvim_create_autocmd("Filetype",{
-    pattern = {"sql"},
-    callback = function()
-        vim.schedule(function()
-            vim.keymap.set("n", "<leader>gd", "<CMD>DBTGoToDefinition<CR>", { desc = "Go to definition DBT" })
-        end)
+vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("NvimDbt", { clear = true }),
+    pattern = "sql",
+    callback = function(event)
+        vim.keymap.set("n", "<leader>gd", "<Cmd>DBTGoToDefinition<CR>", {
+            buffer = event.buf,
+            desc = "Go to definition DBT",
+        })
     end,
 })
